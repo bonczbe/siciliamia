@@ -1,55 +1,35 @@
 import fetch from 'node-fetch';
 import * as http from 'http';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ServerApiVersion } from 'mongodb';
 
 
-async function main(){
 const uri = "mongodb+srv://sicilia:sicilia@cluster0.5ag7jeq.mongodb.net/test";
- 
-
-    const client = new MongoClient(uri);
- 
-    try {
-        // Connect to the MongoDB cluster
-        await client.connect();
- 
-        // Make the appropriate DB calls
-        await  listDatabases(client);
- 
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
-    }
-}
-main().catch(console.error);
-
-
-async function listDatabases(client){
-    var databasesList = await client.db().admin().listDatabases();
- 
-    console.log("Databases:");
-    databasesList.databases.forEach(db => console.log(` - ${db.name}`));
-};
- 
-
+    const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
+    const db = client.db("Cluster0");
+    const coll = db.collection("sicilia");
 
 const server = http.createServer((req,res)=>{
-    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'application/JSON');
 
     var datas={};
 
     if(req.url=="/refresh"&& req.method=="GET"){
         fetch('https://api.publicapis.org/entries')
             .then((response) => response.json())
-            .then((data) => datas = data['entries']);
+            .then((data) => {
+                datas = Object.values(data["entries"]).map(item=>({
+                    API: item.API,
+                    Description: item.Description,
+                    Link: item.Link,
+                    Category: item.Category
+                }));
+                res.write(JSON.stringify(datas));
+                res.end()
+            });
 
-    }else if(req.method=="GET"&& req.url=="/data"){
+    }else if( req.url=="/data"&&req.method=="GET"){
 
     }
-    
-    res.write(JSON.stringify(datas));
-    res.end();
 });
 
 server.listen(3008,'localhost',()=>{
