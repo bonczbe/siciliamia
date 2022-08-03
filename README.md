@@ -1,4 +1,5 @@
 Steps to run this project properly:
+
 1, go to the root directory of your project and type npmi i
 
 2, go to the backend folder with cmd and start node server with the following command: node fetching      (It will start on localhost:3008)
