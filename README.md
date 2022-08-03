@@ -1,6 +1,6 @@
 Steps to run this project properly:
 
-1, go to the backend folder with cmd and start node server with the following command: node fetching
+1, go to the backend folder with cmd and start node server with the following command: node fetching      (It will start on localhost:3008)
 
 2, open another terminal and type the following command in the root folder of the project: npm start
 
