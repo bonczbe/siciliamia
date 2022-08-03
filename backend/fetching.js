@@ -8,7 +8,7 @@ const coll = db.collection("sicilia")
 
 const server = http.createServer(async (req,res)=>{
     res.setHeader('Content-Type', 'application/JSON');
-    res.setHeader("Allow-Cross-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", "*");
     if(req.url=="/refresh"&& req.method=="GET"){
         coll.deleteMany( { } )
         fetch('https://api.publicapis.org/entries')
